@@ -50,8 +50,10 @@ I used a cross-validated approach for validating the model. Accuracy is defined 
 
 Comparing my Chain-CRF (trained on 550 headlines) to Stanford's state-of-the-art NER (trained on 300,000 lines of text) demonstrates the success of my model. Stanford's model was able to better predict PERSON in a headline by 5%. My model predicted ORGANIZATION 13% better than Stanford's model.
 
-All that said, Stanford's model was never designed to predict POSITION labels. This is the true reason a custom model is needed. My model prediction POSITION with 80% accuracy. Thus for specialized applications, the efforts to build custom models are required.
+All that said, Stanford's model was never designed to predict POSITION labels. This is the true reason a custom model is needed. My model ended up predicted POSITION with 80% accuracy. Thus for specialized applications, the efforts to build custom models are required.
 
 
 ## Results
-PinkSlipper - Using Chain CRF machine learning models to conditionally classify text in press release headlines relating to the hiring / firing of individuals 
+A custom Chain-CRF was built to extract PERSON, ORGANIZATION, and POSITION information from press releases relating to the hiring / firing of executives. A webapp was built to display press releases for interested executive recruiters. The press release content is filtered on the POSITION tags of the articles to ensure it is only displaying content relevant to that specific recruiter. An example video of the working app is shown here:
+
+[![PinkSlipper Demo](http://img.youtube.com/vi/eVX4VQPxUX0/0.jpg)](https://youtu.be/eVX4VQPxUX0 "PinkSlipper Demo")
