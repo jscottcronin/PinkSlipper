@@ -56,4 +56,4 @@ All that said, Stanford's model was never designed to predict POSITION labels. T
 ## Results
 A custom Chain-CRF was built to extract PERSON, ORGANIZATION, and POSITION information from press releases relating to the hiring / firing of executives. A webapp was built to display press releases for interested executive recruiters. The press release content is filtered on the POSITION tags of the articles to ensure it is only displaying content relevant to that specific recruiter. An example video of the working app is shown here:
 
-[![PinkSlipper Demo](http://img.youtube.com/vi/eVX4VQPxUX0/1.jpg)](https://youtu.be/eVX4VQPxUX0 "PinkSlipper Demo")
+[![PinkSlipper Demo](http://img.youtube.com/vi/eVX4VQPxUX0/maxresdefault.jpg)](https://youtu.be/eVX4VQPxUX0 "PinkSlipper Demo")
