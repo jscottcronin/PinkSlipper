@@ -7,6 +7,12 @@ import newspaper
 
 
 def in_clean_db(title, database):
+    '''
+    PURPOSE:    check if article is in given database
+    INPUT:      title (str) - article headline
+                database (pymongo obj) - connection to mongodb
+    OUTPUT:     boolean -  True if article is in database
+    '''
     if database.find({'_id': title}).count() > 0:
         return True
     else:
@@ -14,12 +20,29 @@ def in_clean_db(title, database):
 
 
 def page_data_added(title, database):
+    '''
+    PURPOSE:    check if page_data was added to article in mongodb
+    INPUT:      title (str) - article headline
+                database (pymongo obj) - connection to mongodb
+    OUTPUT:     boolean -  True if article page_data is in database
+    '''
     if database.find({'_id': title, 'date': {'$exists': True}}).count() > 0:
         return True
     else:
         return False
 
+
 def add_to_clean_db(title, link, soup, source, database):
+    '''
+    PURPOSE:    use newspaper to extract article features and save
+                into database
+    INPUT:      title (str) - article headline
+                link (str) - url for article
+                soup (str) - article body soup
+                source (str) - article source
+                database (pymongo obj) - mongodb connection obj
+    OUTPUT:     None
+    '''
     article = newspaper.Article(link)
     article.download(html=soup)
     article.parse()
@@ -44,13 +67,16 @@ def add_to_clean_db(title, link, soup, source, database):
     database.insert_one(data)
 
 
-def get_article():
-    title == "Hello Kitty Men; Unveiling 12 Items in Collaboration with 6 Tokyo Men's Brands"
-    soup = BeautifulSoup(soup, 'html.parser')
-
-
 def add_features_from_page_soup(title, link, soup, db):
-    
+    '''
+    PURPOSE:    update article features in mongodb with info from
+                page_soup
+    INPUT:      title (str) - article headline
+                link (str) - url for article
+                soup (str) - page_soup for given article
+                db (pymongo obj) - connection to mongodb
+    OUTPUT:     None
+    '''
     print title
     if in_clean_db(title, db) and not page_data_added(title, db):
         soup = BeautifulSoup(soup, 'html.parser')
@@ -82,11 +108,17 @@ def add_features_from_page_soup(title, link, soup, db):
                            'brief': summary,
                            'img': img
                            }
-    
+
         db.update_one(uid, {'$set': additional_data})
 
 
 def main2():
+    '''
+    PURPOSE:    update articles in new mongodb with features extracted
+                from page_soup
+    INPUT:      None
+    OUTPUT:     None
+    '''
     cli = pymongo.MongoClient()
     db = cli.pr
     coll = db.prnewswire
@@ -104,12 +136,18 @@ def main2():
         else:
             print 'updating features'
             add_features_from_page_soup(title, link, psoup, coll2)
-        print 'Importing article %i of %i' %(count, tot)
+        print 'Importing article %i of %i' % (count, tot)
         count += 1
     cli.close()
 
 
 def main():
+    '''
+    PURPOSE:    cleanse articles from original mongodb and store
+                in new mongodb with updated features from body soup
+    INPUT:      None
+    OUTPUT:     None
+    '''
     cli = pymongo.MongoClient()
     db = cli.pr
     coll = db.prnewswire
@@ -127,7 +165,7 @@ def main():
             add_to_clean_db(title, link, soup, source, coll2)
         else:
             print 'already in clean db'
-        print 'Importing article %i of %i' %(count, tot)
+        print 'Importing article %i of %i' % (count, tot)
 
         count += 1
 

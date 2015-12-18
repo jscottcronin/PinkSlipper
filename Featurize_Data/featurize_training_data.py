@@ -6,8 +6,10 @@ import ipdb
 
 def extract_loc(row):
     '''
-    INPUT: dataframe row from df.apply lambda func
-    OUTPUT: string describing geographic location
+    PURPOSE:    get location of article. function is designed
+                for use with pandas dataframe apply function.
+    INPUT:      row (pandas df row) - from df.apply lambda func
+    OUTPUT:     location (str) - geographic location
     '''
     try:
         month = row['date'][:3]
@@ -22,8 +24,9 @@ def extract_loc(row):
 
 def extract_body(row):
     '''
-    INPUT: dataframe row from df.apply lambda func
-    OUTPUT: string of news article body
+    PURPOSE:    get text body from article
+    INPUT:      row (pandas df row) - from df.apply lambda func
+    OUTPUT:     body (str) - article body text
     '''
     try:
         body = row['body'].split('/ -- ', 1)[1].strip()
@@ -34,8 +37,9 @@ def extract_body(row):
 
 def get_org(row):
     '''
-    INPUT: dataframe row from df.apply lambda func
-    OUTPUT: string describing org name
+    PURPOSE:    get orginazation name from article
+    INPUT:      row (pandas df row) - from df.apply lambda func
+    OUTPUT:     body (str) - orginazation name
     '''
     try:
         org = row['authors'][0]
@@ -46,8 +50,12 @@ def get_org(row):
 
 def clean_data(df):
     '''
-    INPUT: dataframe
-    OUTPUT: dataframe after some cleaning / filtering
+    PURPOSE:    filter data to only use articles thare are: english
+                and from personnel-announcements-list page on PR Newswire.
+                Furthermore, extract only relevant features for each article
+                and drop any remaining NaNs.
+    INPUT:      df (pandas dataframe) - all articles from mongodb
+    OUTPUT:     df (pandas dataframe) - df of articles after filtering
     '''
     df2 = df[(df.lang == 'en') &
              (df.source == 'personnel-announcements-list')]
@@ -63,8 +71,10 @@ def clean_data(df):
 
 if __name__ == '__main__':
     '''
-    PURPOSE: open all docs in a mongo db, clean and filter
-    the docs for model training, and save docs in new db
+    PURPOSE:    open all docs in a mongo db, clean and filter
+                the docs for model training, and save docs in new db
+    INPUT:      None
+    OUTPUT:     None
     '''
     cli = pymongo.MongoClient()
     db = cli.pr
