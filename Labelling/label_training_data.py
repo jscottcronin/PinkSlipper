@@ -16,10 +16,13 @@ TITLE = None
 
 def save_to_db(form, title, db=DB):
     '''
-    INPUT:  form - html form with fields for labels
-            title - headline of article as unicode string
-            db - pymongo conn to mongodb db
-    OUTPUT: None
+    PURPOSE:    Triggered from submit button on form.
+                Saves training labels for words in article
+                headline in mongodb
+    INPUT:      form (html form) - fields are correct labels
+                title (str) - headline of article
+                db (pymongo obj) - conn to mongodb
+    OUTPUT:     None
     '''
     labels = defaultdict(list)
     for position, word in enumerate(title.split()):
@@ -44,6 +47,12 @@ def save_to_db(form, title, db=DB):
 
 @app.route('/')
 def index():
+    '''
+    PURPOSE:    Initial site to specify document index
+                of where to begin labelling training data
+    INPUT:      None
+    OUTPUT:     html (str) - html to input dcoument index
+    '''
     return '''
         <form action="/label" method='POST' >
             <input type="text" name="index" />
@@ -51,11 +60,15 @@ def index():
         </form>
         '''
 
+
 @app.route('/label', methods=['POST', 'GET'])
 def label():
     '''
+    PURPOSE:    load article title from mongodb. When a POST request
+                is made on the form, the labelled words are stored back
+                in the mongodb
     INPUT:  None
-    OUTPUT: rendered label.html object
+    OUTPUT: html (flask html obj) - rendered label.html
     '''
     global INDEX
     global TITLE

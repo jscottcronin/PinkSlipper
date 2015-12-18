@@ -1,99 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Bootstrap 101 Template</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}">
+    <title>PinkSlipper</title>
+    <link href="static/img/favicon.ico" rel="shortcut icon">
+    <!-- <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}"> -->
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- Bootstrap Core CSS -->
+    <link href="static/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="static/css/1-col-portfolio.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-  </head>
-  <body>
+
+</head>
+
+<body>
+    
+        <div id="Intro">
+        <a> <img src="static/img/logo_356x200.png"></a>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-static-top" role="navigation" id="topnavbar">
+        
+        <div class="container">
+            <!-- <a href="#" class="pull-left"><img src="static/img/navbar_text_200x30.png"></a> -->
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand text-muted" href="#">Your Daily Scoop on Business Leaders Worldwide</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="/">Recent News</a>
+                    </li>
+                    <li>
+                        <a href="http://www.jscottcronin.com/" target="_blank">About Me</a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/jscottcronin/PinkSlipper" target="_blank">Github</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+    </header>
+
+    <div class="row text-center">
     <h1>{{text}}</h1>
+    </div>
     <br>
-    <h5>Index = {{index}}</h5>
     <form action="/label" method='POST' class="form-horizontal">
     <fieldset>
 
-    <!-- Form Name -->
-    <!-- <legend>Label Data</legend> -->
 
-    <!-- Multiple Radios -->
-    <div class="form-group">
-      <label class="col-md-4 control-label" for="horf">Hired or Fired</label>
-      <div class="col-md-4">
-      <div class="radio">
-        <label for="horf-0">
-          <input type="radio" name="horf" id="horf-0" value="Hired" checked="checked">
-          Hired
-        </label>
+    <!-- Page Content -->
+    <div class="container">
+      <div class="row text-center">
+      <!-- Form Name -->
+      <!-- <legend>Label Data</legend> -->
+
+      <!-- Multiple Radios -->
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="horf">Hired or Fired</label>
+        <div class="col-md-4">
+        <div class="radio">
+          <label for="horf-0">
+            <input type="radio" name="horf" id="horf-0" value="Hired" checked="checked">
+            Hired
+          </label>
+          </div>
+        <div class="radio">
+          <label for="horf-1">
+            <input type="radio" name="horf" id="horf-1" value="Fired">
+            Fired
+          </label>
+          </div>
+        <div class="radio">
+          <label for="horf-2">
+            <input type="radio" name="horf" id="horf-2" value="Not_Relevant">
+            Not Relevant Article
+          </label>
+          </div>
         </div>
-      <div class="radio">
-        <label for="horf-1">
-          <input type="radio" name="horf" id="horf-1" value="Fired">
-          Fired
-        </label>
-        </div>
-      <div class="radio">
-        <label for="horf-2">
-          <input type="radio" name="horf" id="horf-2" value="Not_Relevant">
-          Not Relevant Article
-        </label>
+      </div>
+
+
+      <!-- Textarea -->
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="org">Org</label>
+        <div class="col-md-4">                     
+          <textarea class="form-control" id="org" name="org"></textarea>
         </div>
       </div>
-    </div>
 
+      <!-- Textarea -->
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="name">Name</label>
+        <div class="col-md-4">                     
+          <textarea class="form-control" id="name" name="name"></textarea>
+        </div>
+      </div>
 
-    <!-- Textarea -->
-    <div class="form-group">
-      <label class="col-md-4 control-label" for="org">Org</label>
-      <div class="col-md-4">                     
-        <textarea class="form-control" id="org" name="org"></textarea>
+      <!-- Textarea -->
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="position">Position</label>
+        <div class="col-md-4">                     
+          <textarea class="form-control" id="position" name="position"></textarea>
+        </div>
+      </div>
+
+      <!-- Textarea -->
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="name2">Name 2</label>
+        <div class="col-md-4">                     
+          <textarea class="form-control" id="name2" name="name2"></textarea>
+        </div>
+      </div>
+
+      
+      <form action="/label" method='POST' >
+        <input type="submit" />
+      </form>
+      <br>
+      <br>
       </div>
     </div>
+<!-- /.container -->
 
-    <!-- Textarea -->
-    <div class="form-group">
-      <label class="col-md-4 control-label" for="name">Name</label>
-      <div class="col-md-4">                     
-        <textarea class="form-control" id="name" name="name"></textarea>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container" style="padding-top: 50px">
+        <div class="row text-center">
+            <p class="text-muted">Copyright &copy; Scott Cronin 2015</p>
+        </div>
       </div>
-    </div>
+    </footer>
 
-    <!-- Textarea -->
-    <div class="form-group">
-      <label class="col-md-4 control-label" for="position">Position</label>
-      <div class="col-md-4">                     
-        <textarea class="form-control" id="position" name="position"></textarea>
-      </div>
-    </div>
 
-    <!-- Textarea -->
-    <div class="form-group">
-      <label class="col-md-4 control-label" for="name2">Name 2</label>
-      <div class="col-md-4">                     
-        <textarea class="form-control" id="name2" name="name2"></textarea>
-      </div>
-    </div>
+    <!-- jQuery Version 1.11.1 -->
+    <script src="static/js/jquery.js"></script>
 
-    
-    <form action="/label" method='POST' >
-      <input type="submit" />
-    </form>
-       
+    <!-- Bootstrap Core JavaScript -->
+    <script src="static/js/bootstrap.js"></script>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="static/js/bootstrap.min.js"></script>
-  </body>
+</body>
+
 </html>
