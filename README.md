@@ -110,8 +110,8 @@ A custom Chain-CRF was built to extract PERSON, ORGANIZATION, and POSITION infor
 
 ####Web App:
 
-* Flask
-* Bootstrap
+* flask
+* bootstrap
 * pagination
 * html
 * css
