@@ -72,7 +72,7 @@ def label():
     '''
     global INDEX
     global TITLE
-    if flask.request.method == 'POST' and INDEX == None:
+    if flask.request.method == 'POST' and INDEX is None:
         INDEX = int(flask.request.form['index'])
     elif flask.request.method == 'POST':
         save_to_db(flask.request.form, TITLE)
@@ -86,6 +86,6 @@ if __name__ == '__main__':
     cli = pymongo.MongoClient()
     DB = cli.pr
     cursor = DB.pr_train.find({'labels': {'$exists': False}})
-    DF =  pd.DataFrame(list(cursor))
+    DF = pd.DataFrame(list(cursor))
     app.run(host='0.0.0.0', port=8080, debug=True)
     cli.close()
