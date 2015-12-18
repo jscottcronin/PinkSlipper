@@ -10,9 +10,10 @@ from nltk.tag import StanfordNERTagger, StanfordPOSTagger
 
 def connect_to_mongodb():
     '''
-    INPUT:  None
-    OUTPUT: db - pymongo object connection to mongodb
-            cli - pymongo client to close conn from main
+    PURPOSE:    return db and client connection to mongodb
+    INPUT:      None
+    OUTPUT:     db (pymongo obj) - connection to mongodb
+                cli (pymongo client) - to close conn in main
     '''
     cli = pymongo.MongoClient()
     db = cli.pr
@@ -21,9 +22,11 @@ def connect_to_mongodb():
 
 def featurize_page_soup(soup, link):
     '''
-    INPUT:  page_soup - as HTML string
-            link - string url for article of interest
-    OUTPUT: page_data - dict of additional features from page_soup
+    PURPOSE:    extract date, time, summary, and img info for given
+                article link on a site containing many article links
+    INPUT:      soup (str) - html of page_soup
+                link (str) - url for article of interest
+    OUTPUT:     page_data (dict) - additional features from page_soup
     '''
     soup = BeautifulSoup(soup, 'html.parser')
     s = soup.find(class_='news-release', href=link) \
@@ -57,8 +60,10 @@ def featurize_page_soup(soup, link):
 
 def feature_engineering(data):
     '''
-    INPUT:  data - dict of features for a given document
-    OUTPUT: d - dict of additional features for given document
+    PURPOSE:    build clean features for body text, location,
+                and organization article came from
+    INPUT:      data (dict) - features for a given article
+    OUTPUT:     d (dict) - engineered features for given document
     '''
     try:
         text = data['body'].split('/ -- ', 1)[1].strip()
@@ -87,8 +92,9 @@ def feature_engineering(data):
 
 def featurize(doc):
     '''
-    INPUT: doc - dict of scraped data for each document
-    OUTPUT: data - dict of relevant features for each doc
+    PURPOSE:    build features from soup for each document
+    INPUT:      doc (dict) - scraped data for each document
+    OUTPUT:     data (dict) - full feature set for each doc
     '''
     title = doc['_id']
     link = doc['link']
@@ -124,10 +130,11 @@ def featurize(doc):
 
 def get_POS(title, label, st_pos):
     '''
-    INPUT:  title - string of headline for doc
-            label - dict of features for doc
-            st_pos - Stanford POS tagger object used for tagging
-    OUTPUT: label - dict of features for doc with updated POS
+    PURPOSE:    update POS tag for each word in article
+    INPUT:      title (str) -  article headline
+                label (dict) - features for each word in article headline
+                st_pos (Stanford POS tagger obj) - used for POS tagging
+    OUTPUT:     label (dict) - features for each word in article headline
     '''
     pos_tpls = st_pos.tag(title.split())
     for i, (word, pos) in enumerate(pos_tpls):
@@ -137,10 +144,11 @@ def get_POS(title, label, st_pos):
 
 def get_ner(title, label, st_ner):
     '''
-    INPUT:  title - string of headline for doc
-            label - dict of features for doc
-            st_ner - Stanford NER tagger object used for tagging
-    OUTPUT: label - dict of features for doc with updated NER
+    PURPOSE:    update NER tag for each word in article
+    INPUT:      title (str) -  article headline
+                label (dict) - features for each word in article headline
+                st_ner (Stanford NER tagger obj) - used for NER tagging
+    OUTPUT:     label (dict) - features for each word in article headline
     '''
     ner_tpls = st_ner.tag(title.split())
     for i, (word, ner) in enumerate(ner_tpls):
@@ -150,10 +158,14 @@ def get_ner(title, label, st_ner):
 
 def get_labels(title, st_pos, st_ner):
     '''
-    INPUT:  title - string of headline for doc
-            st_pos - Stanford POS tagger object used for tagging
-            st_ner - Stanford NER tagger object used for tagging
-    OUTPUT: label - dict of features to be used for vectorizing docs
+    PURPOSE:    for a given article, build label dict which contains
+                features for each word to be used in modeling. Keys
+                for label dict are the word positions in headline title
+                and features include all_lower, all_upper, word_pct, POS
+    INPUT:      title (str) -  article headline
+                st_pos (Stanford POS tagger obj) - used for POS tagging
+                st_ner (Stanford NER tagger obj) - used for NER tagging
+    OUTPUT:     label (dict) - features for each word in article headline
     '''
     num_words = len(title.split())
     label = {}
@@ -172,7 +184,9 @@ if __name__ == '__main__':
     PURPOSE:    Loop through every document scrapped from prnewswire stored
                 in mongodb. Featurize each document and store results in
                 new mongodb collection. Mark each scrapped document in
-                original db so that it does not need to be looked at again.
+                original db so that it is not featurized again.
+    INPUT:      None
+    OUTPUT:     None
     '''
     # using Stanford's POS tagger for featurization of data
     pos = '/Users/scottcronin/nltk_data/taggers' + \

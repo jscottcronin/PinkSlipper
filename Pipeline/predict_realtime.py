@@ -3,12 +3,14 @@ import pandas as pd
 import numpy as np
 import pickle
 
+
 def load_data():
     '''
-    INPUT:  None
-    OUTPUT: cli - Mongoclient object w connection to db
-            db - pymongo object connection to db
-            df - pandas dataframe with data from mongodb
+    PURPOSE:    return db client, connection, and df obj from mongodb
+    INPUT:      None
+    OUTPUT:     cli (pymongo client obj) - client connection to db
+                db (pymongo conn object) - coll connection to db
+                df (pandas df obj) - df loaded w articles from mongodb
     '''
     cli = pymongo.MongoClient()
     db = cli.pr
@@ -16,16 +18,18 @@ def load_data():
     df = pd.DataFrame(list(cursor))
     return cli, db, df
 
+
 def vectorize(label):
     '''
-    INPUT:  label - dict of features for a given document
-    OUTPUT: X - np.array list of 2d ndarray formatted for chainCRF model
+    PURPOSE:    return numpy array X, needed as input for pickled model
+    INPUT:      label (dict) - word features for a given document
+    OUTPUT:     X (np.array) - list of 2d ndarray formatted for model
     '''
-    tags = ['$', '``', "''", '(', ')', ',', '--', '.', ':', 'CC', 'CD', 'DT', 'EX',
-            'FW', 'IN', 'JJ', 'JJR', 'JJS', 'LS', 'MD', 'NN', 'NNP', 'NNPS',
-            'NNS', 'PDT', 'POS', 'PRP', 'PRP$', 'RB', 'RBR', 'RBS', 'RP', 'SYM',
-            'TO', 'UH', 'VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ', 'WDT', 'WP',
-            'WP$', 'WRB', 'BOS', 'EOS']
+    tags = ['$', '``', "''", '(', ')', ',', '--', '.', ':', 'CC', 'CD',
+            'DT', 'EX', 'FW', 'IN', 'JJ', 'JJR', 'JJS', 'LS', 'MD', 'NN',
+            'NNP', 'NNPS', 'NNS', 'PDT', 'POS', 'PRP', 'PRP$', 'RB',
+            'RBR', 'RBS', 'RP', 'SYM', 'TO', 'UH', 'VB', 'VBD', 'VBG',
+            'VBN', 'VBP', 'VBZ', 'WDT', 'WP', 'WP$', 'WRB', 'BOS', 'EOS']
 
     mapping = {'other': 3,
                'org': 0,
@@ -44,12 +48,12 @@ def vectorize(label):
 
     # include POS for num number of words before and after word of interest
     num = 2
-    for i in xrange(1,num+1):
+    for i in xrange(1, num+1):
         col_pos = 'POS' + '+'*i
         col_neg = 'POS' + '-'*i
         df[col_pos] = df['POS'].shift(-i).fillna('EOS')
         df[col_neg] = df['POS'].shift(i).fillna('BOS')
-    
+
     df_pos = pd.get_dummies(df.filter(regex='POS'))
     df = pd.concat([df_calcs, df_pos], axis=1)
     X = df.values
@@ -58,8 +62,10 @@ def vectorize(label):
 
 def convert_y_to_tag(y):
     '''
-    INPUT:  y - np.array list of 1d ndarray model label predictions
-    OUTPUT: list of predicted labels for each word in headline
+    PURPOSE:    prediction from model is 0, 1, 2, or 3. This function
+                converts numerics into strings that they represent.
+    INPUT:      y (np.array) - list of 1d ndarray model predictions
+    OUTPUT:     tag (list) - list of pred labels for each word in headline
     '''
     map_inverse = {0: 'ORGANIZATION',
                    1: 'PERSON',
@@ -71,9 +77,11 @@ def convert_y_to_tag(y):
 
 if __name__ == '__main__':
     '''
-    PURPOSE:    Loops through docs in pr_realtime and predicts labels
-                for each word based on pickled model. Saves labels
+    PURPOSE:    Loops through docs in mongodb and predicts labels
+                for each word using pickled model. Saves labels
                 under doc['label]['word_position']['model'] = label
+    INPUT:      None
+    OUTPUT:     None
     '''
     with open('../Modeling/chainCRF.pkl') as f:
         model = pickle.load(f)
@@ -88,5 +96,3 @@ if __name__ == '__main__':
         db.pr_realtime.update_one({'_id': doc['_id']},
                                   {'$set': {'label': doc['label']}})
     cli.close()
-
-
