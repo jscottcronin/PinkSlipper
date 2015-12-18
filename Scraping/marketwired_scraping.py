@@ -8,8 +8,9 @@ import time
 
 def get_pagemax(url):
     '''
-    INPUT:  url - page from which article links are scraped
-    OUTPUT: pagemax - total number of pages of articles
+    PURPOSE:    return number of pages on site with articles
+    INPUT:      url (str) -  url of site to scrape
+    OUTPUT:     pagemax (int) - total number of pages of articles
     '''
     soup = get_soup(url)
     page = soup.find(class_='PagerStatus')
@@ -19,8 +20,9 @@ def get_pagemax(url):
 
 def get_soup(url):
     '''
-    INPUT:  url as a string
-    OUTPUT: beautiful soup object
+    PURPOSE:    return soup object for any url
+    INPUT:      url (str) -  url of site to scrape
+    OUTPUT:     soup (beautiful soup object) - soup for given url
     '''
     header = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel ' +
               'Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, ' +
@@ -32,9 +34,10 @@ def get_soup(url):
 
 def in_database(article, database):
     '''
-    INPUT:  article - article title/headline as unicode string
-            database - pymongo connection to db collection
-    OUTPUT: Boolean specifying if article is in database
+    PURPOSE:    check if article is in given database
+    INPUT:      article (str) - article headline
+                database (pymongo obj) - connection to mongodb
+    OUTPUT:     boolean -  True if article is in database
     '''
     if database.find({'_id': article}).count() > 0:
         return True
@@ -44,9 +47,11 @@ def in_database(article, database):
 
 def labelled_as_training(article, database):
     '''
-    INPUT:  article - article title/headline as unicode string
-            database - pymongo connection to db collection
-    OUTPUT: Boolean specifying if article has been labelled in database
+    PURPOSE:    check if article is labelled for training models
+                in database
+    INPUT:      article (str) - article headline
+                database (pymongo obj) - connection to mongodb
+    OUTPUT:     boolean - True if article is labelled as training in db
     '''
     training_page = 'http://www.marketwired.com/refine-by?topic=MAC'
     if database.find({'_id': article}, {'source': training_page}).count() > 0:
@@ -57,8 +62,9 @@ def labelled_as_training(article, database):
 
 def is_training(url):
     '''
-    INPUT:  url as string
-    OUTPUT: Boolean specifying if url is from training source or news source
+    PURPOSE:    check if url contains articles for training the model
+    INPUT:      url (str) - url for site with articles
+    OUTPUT:     boolean -  True if url contains articles for training model
     '''
     training_page = 'http://www.marketwired.com/refine-by?topic=MAC'
     if url == training_page:
@@ -69,9 +75,11 @@ def is_training(url):
 
 def get_all_news(coll, url, urlbase):
     '''
-    INPUT:  coll - pymongo object connection to db collection
-            url - website as string to be scraped
-            urlbase - website as string; used by concatenating with link
+    PURPOSE:    Add articles to mongodb. Keys in db are article headlines.
+                Store link, source_page, page_soup, and body_soup in db.
+    INPUT:      coll (pymongo obj) - connection to db collection
+                url (str) - url of site for scraping
+                urlbase (str) - concatenate base with link to get full url
     OUTPUT: None - articles are saved to mongo db
     '''
     soup = get_soup(url)
@@ -95,8 +103,9 @@ def get_all_news(coll, url, urlbase):
 
 def randomize_time():
     '''
-    INPUT:  None
-    OUTPUT: None; this function delays scraping by distribution of time
+    PURPOSE:    delay random time between consecutive url requests
+    INPUT:      None
+    OUTPUT:     None
     '''
     x = np.abs(np.random.normal(0, .1))
     time.sleep(x)
@@ -104,8 +113,9 @@ def randomize_time():
 
 def main():
     '''
-    INPUT:  None
-    OUTPUT: None
+    PURPOSE:    scrape articles from marketwired and save into mongodb
+    INPUT:      None
+    OUTPUT:     None
     '''
     cli = pymongo.MongoClient()
     db = cli.pr
@@ -117,7 +127,7 @@ def main():
                  'refine-by?topic=MAC', urlbase)
     print 'getting all news'
     for page in xrange(1, get_pagemax(url)):
-        print 'page: %i' %page
+        print 'page: %i' % page
         randomize_time()
         pageurl = url + '?page=' + str(page)
         get_all_news(coll, pageurl, urlbase)
